@@ -11,7 +11,7 @@
     <div id="msg" aria-live="polite"></div>
     <form id="loginForm" novalidate>
       <div class="field"><label for="username">Username</label><input id="username" required autocomplete="username" autofocus></div>
-      <div class="field"><label for="password">Password</label><input id="password" type="password" required autocomplete="current-password"></div>
+      <div class="field"><label for="password">Password</label><input id="password" type="password" required autocomplete="current-password"></div><div style="margin-top:8px;"><label style="display:flex;align-items:center;gap:6px;font-size:14px;cursor:pointer;"><input type="checkbox" id="showPassword" style="width:auto;"> Show Password</label></div>
       <button class="btn btn-primary auth-submit" type="submit">Login to CareConnect →</button>
     </form>
     <p class="muted auth-register">New user? <a href="/register/">Create an account</a></p>
@@ -46,3 +46,11 @@ document.getElementById('loginForm').onsubmit=async e=>{
 };
 </script>
 {% endblock %}
+
+
+<script>
+document.getElementById("showPassword").addEventListener("change", function () {
+    const password = document.getElementById("password");
+    password.type = this.checked ? "text" : "password";
+});
+</script>
