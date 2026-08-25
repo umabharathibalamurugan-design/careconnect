@@ -1,0 +1,102 @@
+{% extends 'base.html' %}{% load static %}
+{% block title %}CareConnect | Incidents{% endblock %}
+{% block content %}
+<main class="page incident-page">
+  <section class="hero incident-hero">
+    <div><div class="eyebrow">INCIDENTS</div><h1>Emergency activity</h1><p class="muted">Track the complete response lifecycle and stay connected with the people handling each incident.</p></div>
+    <div class="incident-hero-status"><span class="live-pill"><i></i> Live incident workspace</span></div>
+  </section>
+
+  <section class="section incident-workspace">
+    <div class="card incident-list-panel">
+      <div class="section-head"><div><span class="eyebrow">INCIDENT QUEUE</span><h2>Your incidents</h2></div><span id="incidentCount" class="soft-count">0</span></div>
+      <div class="incident-filters"><input id="search" placeholder="Search incident, resident or message…" aria-label="Search incidents"><select id="status" aria-label="Filter incident status"><option value="all">All status</option><option value="open">Open</option><option value="acknowledged">Acknowledged</option><option value="active">Active</option><option value="escalated">Escalated</option><option value="resolved">Resolved</option><option value="cancelled">Cancelled</option></select></div>
+      <div id="history" class="incident-list"><div class="empty">Loading incidents…</div></div>
+    </div>
+
+    <aside class="card incident-chat-panel" id="incidentChatPanel">
+      <div class="chat-header">
+        <div><span class="eyebrow">INCIDENT CHAT</span><h2 id="chatTitle">Select an incident</h2><p id="chatSubtitle" class="muted">Secure response conversation for the selected emergency.</p></div>
+        <span class="chat-live"><i></i> Live</span>
+      </div>
+      <div class="chat-context" id="chatContext" hidden></div>
+      <div id="chatMessages" class="incident-chat-messages">
+        <div class="chat-empty-state"><div class="chat-empty-icon">💬</div><strong>No incident selected</strong><span>Choose an incident to open its response conversation.</span></div>
+      </div>
+      <div id="incidentTimeline" class="incident-timeline"><div class="chat-empty-state">Select an incident to load the real response timeline.</div></div><div id="chatAudio" class="chat-audio-list"></div>
+      <div class="chat-composer" id="chatComposer" hidden>
+        <textarea id="chatInput" rows="2" maxlength="1000" placeholder="Type an update for the response team…"></textarea>
+        <div class="chat-composer-bottom"><span id="chatHint">Keep messages short and action-focused.</span><div class="actions"><button id="chatVoice" class="btn btn-light" type="button">🎙 Voice note</button><button id="chatSpeak" class="btn btn-light" type="button">🗣 Speak</button><button id="chatSend" class="btn btn-primary" type="button">Send update</button></div></div>
+      </div>
+    </aside>
+  </section>
+</main>
+{% endblock %}
+{% block scripts %}
+<script>
+let allIncidents=[]; let selectedIncident=null; let chatTimer=null; let sending=false;
+const activeStatuses=['open','acknowledged','active','escalated'];
+const role=()=>String(CC.user?.role||'').toLowerCase();
+const canRespond=()=>['volunteer','security','security_volunteer','security_admin','society_admin','admin','superadmin'].includes(role());
+function statusLabel(s){return String(s||'').replace('_',' ')}
+function lifecycle(status){ return `<div class="live-state"><span class="badge ${esc(String(status||'').toLowerCase())}">Live status: ${esc(statusLabel(status))}</span></div>`; }
+function renderHistory(){
+  const q=(document.getElementById('search').value||'').toLowerCase(); const s=document.getElementById('status').value;
+  const filtered=allIncidents.filter(x=>(s==='all'||String(x.status).toLowerCase()===s)&&(!q||JSON.stringify(x).toLowerCase().includes(q)));
+  document.getElementById('incidentCount').textContent=filtered.length;
+  document.getElementById('history').innerHTML=filtered.length?filtered.map(x=>{
+    const active=activeStatuses.includes(String(x.status).toLowerCase());
+    return `<article class="incident-item ${selectedIncident?.id===x.id?'selected':''}" onclick="openChat(${x.id})">
+      <div class="incident-item-top"><strong>#${esc(x.id)} · ${esc(x.alert_type)}</strong><span class="badge ${esc(String(x.status).toLowerCase())}">${esc(statusLabel(x.status))}</span></div>
+      <div class="meta">${esc(x.resident_name||x.resident_username||'Resident')} · ${fmt(x.created_at)}</div>
+      <p>${esc(x.message||'Emergency alert')}</p>
+      ${lifecycle(x.status)}
+      <div class="incident-item-actions">
+        <a class="btn btn-light btn-sm" target="_blank" onclick="event.stopPropagation()" href="https://www.google.com/maps?q=${x.latitude},${x.longitude}">📍 GPS</a>
+        ${canRespond()&&active?`<button class="btn btn-primary btn-sm" onclick="event.stopPropagation();respond(${x.id},'accepted')">Accept</button><button class="btn btn-light btn-sm" onclick="event.stopPropagation();respond(${x.id},'on_way')">On way</button><button class="btn btn-light btn-sm" onclick="event.stopPropagation();respond(${x.id},'arrived')">Arrived</button><button class="btn btn-success btn-sm" onclick="event.stopPropagation();respond(${x.id},'completed')">Resolve</button>`:''}
+        <button class="btn btn-light btn-sm chat-open-btn" onclick="event.stopPropagation();openChat(${x.id})">💬 Chat</button>
+      </div>
+    </article>`
+  }).join(''):'<div class="empty incident-empty">No incidents found.</div>';
+}
+async function loadIncidents(){
+  try{const r=await CC.json('/api/emergency-alerts/');allIncidents=Array.isArray(r)?r:(r.results||[]);renderHistory();const wanted=new URLSearchParams(location.search).get('alert');if(wanted&&allIncidents.some(x=>String(x.id)===wanted))openChat(Number(wanted));}
+  catch(e){document.getElementById('history').innerHTML='<div class="empty">Unable to load incidents. '+esc(e.message)+'</div>'}
+}
+async function respond(id,a){try{await CC.json('/api/response/alerts/'+id+'/respond/',{method:'POST',body:JSON.stringify({action:a})});toast('Response status updated: '+statusLabel(a),'success');await loadIncidents();if(selectedIncident?.id===id)openChat(id);}catch(e){toast(e.message,'error')}}
+async function openChat(id){
+  const incident=allIncidents.find(x=>x.id===id); if(!incident)return; selectedIncident=incident; renderHistory();
+  document.getElementById('chatTitle').textContent=`Incident #${incident.id} · ${incident.alert_type}`;
+  document.getElementById('chatSubtitle').textContent=`${incident.resident_name||incident.resident_username||'Resident'} · ${fmt(incident.created_at)}`;
+  const ctx=document.getElementById('chatContext');ctx.hidden=false;ctx.innerHTML=`<div><span class="context-label">STATUS</span><strong class="badge ${esc(String(incident.status).toLowerCase())}">${esc(statusLabel(incident.status))}</strong></div><div><span class="context-label">PRIORITY</span><strong class="badge ${esc(String(incident.priority||'').toLowerCase())}">${esc(incident.priority||'—')}</strong></div><a target="_blank" href="https://www.google.com/maps?q=${incident.latitude},${incident.longitude}">📍 Open GPS</a>`;
+  document.getElementById('chatComposer').hidden=false; await loadChat(id,true); await loadAudio(id); startChatPolling(id);
+}
+function startChatPolling(id){clearInterval(chatTimer);chatTimer=setInterval(()=>{if(selectedIncident?.id===id)loadChat(id,false)},3500)}
+async function loadTimeline(id){try{const r=await CC.json(`/api/response/alerts/${id}/updates/`);const rows=Array.isArray(r)?r:(r.results||[]);const el=document.getElementById('incidentTimeline');el.innerHTML=rows.length?rows.map(x=>`<div class="timeline-row"><div class="timeline-dot"></div><div><strong>${esc(String(x.status||'').replace('_',' '))}</strong><p>${esc(x.note||'Status updated')}</p><small>${esc(x.actor_name||'System')} · ${fmt(x.created_at)}</small></div></div>`).join(''):'<div class="chat-empty-state">No response actions have been recorded yet.</div>'}catch(e){}}
+async function loadChat(id,scroll){
+  try{await loadTimeline(id);const r=await CC.json(`/api/response/alerts/${id}/chat/`);const messages=Array.isArray(r)?r:(r.results||[]);const box=document.getElementById('chatMessages');
+    if(!messages.length){box.innerHTML=`<div class="chat-empty-state"><div class="chat-empty-icon">💬</div><strong>No messages yet</strong><span>Start the response conversation. Updates are shared with the incident team.</span></div>`;return}
+    box.innerHTML=messages.map(m=>{const mine=String(m.sender)===String(CC.user?.id);return `<div class="chat-message ${mine?'mine':''}"><div class="chat-avatar">${esc((m.sender_name||'U').charAt(0).toUpperCase())}</div><div class="chat-bubble-wrap"><div class="chat-sender">${esc(mine?'You':m.sender_name||'Responder')} <time>${fmt(m.created_at)}</time></div><div class="chat-bubble">${esc(m.message)}</div></div></div>`}).join('');
+    if(scroll)box.scrollTop=box.scrollHeight;
+  }catch(e){document.getElementById('chatMessages').innerHTML=`<div class="chat-error">Unable to load incident chat.<br><small>${esc(e.message)}</small></div>`}
+}
+async function sendChat(){if(!selectedIncident||sending)return;const input=document.getElementById('chatInput');const message=input.value.trim();if(!message)return;sending=true;const btn=document.getElementById('chatSend');btn.disabled=true;try{await CC.json(`/api/response/alerts/${selectedIncident.id}/chat/`,{method:'POST',body:JSON.stringify({message})});input.value='';await loadChat(selectedIncident.id,true);toast('Incident update sent','success')}catch(e){toast(e.message,'error')}finally{sending=false;btn.disabled=false;input.focus()}}
+
+let chatRecorder=null,chatChunks=[],chatRecognition=null;
+async function recordIncidentVoice(){
+ if(!selectedIncident){toast('Select an incident first','error');return}
+ const btn=document.getElementById('chatVoice');
+ if(chatRecorder?.state==='recording'){chatRecorder.stop();return}
+ if(!navigator.mediaDevices?.getUserMedia){toast('Voice recording is not supported in this browser','error');return}
+ try{const stream=await navigator.mediaDevices.getUserMedia({audio:true});chatChunks=[];chatRecorder=new MediaRecorder(stream);chatRecorder.ondataavailable=e=>{if(e.data.size)chatChunks.push(e.data)};chatRecorder.onstop=async()=>{stream.getTracks().forEach(t=>t.stop());btn.textContent='🎙 Voice note';const blob=new Blob(chatChunks,{type:chatRecorder.mimeType||'audio/webm'});const fd=new FormData();fd.append('audio',blob,'incident-voice.webm');try{await CC.json(`/api/response/alerts/${selectedIncident.id}/audio/`,{method:'POST',body:fd});toast('Voice note sent','success');loadAudio(selectedIncident.id)}catch(e){toast(e.message,'error')}};chatRecorder.start();btn.textContent='⏹ Stop recording';toast('Recording voice note…')}catch(e){toast(e.message||'Microphone permission denied','error')}
+}
+function toggleChatSpeech(){
+ const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){toast('Voice-to-text is not supported in this browser','error');return}
+ const input=document.getElementById('chatInput'),btn=document.getElementById('chatSpeak');if(chatRecognition){chatRecognition.stop();return}
+ chatRecognition=new SR();chatRecognition.lang='en-IN';chatRecognition.interimResults=true;chatRecognition.continuous=false;chatRecognition.onstart=()=>btn.textContent='⏹ Listening';chatRecognition.onresult=e=>{let t='';for(let i=e.resultIndex;i<e.results.length;i++)t+=e.results[i][0].transcript+' ';input.value=(input.value?' '+input.value:'')+t.trim()};chatRecognition.onerror=()=>{};chatRecognition.onend=()=>{chatRecognition=null;btn.textContent='🗣 Speak'};chatRecognition.start();
+}
+async function loadAudio(id){const box=document.getElementById('chatAudio');if(!box)return;try{const a=await CC.json(`/api/response/alerts/${id}/audio/`);box.innerHTML=a.length?`<div class="chat-audio-title">Voice notes</div>`+a.map(x=>`<div class="chat-audio-row"><span>🎙 ${esc(x.sender||'Responder')} · ${fmt(x.created_at)}</span><audio controls preload="none" src="${esc(x.audio)}"></audio></div>`).join(''):''}catch(e){box.innerHTML=''} }
+document.addEventListener('DOMContentLoaded',async()=>{if(!CC.requireLogin())return;document.getElementById('search').oninput=renderHistory;document.getElementById('status').onchange=renderHistory;document.getElementById('chatSend').onclick=sendChat;document.getElementById('chatVoice').onclick=recordIncidentVoice;document.getElementById('chatSpeak').onclick=toggleChatSpeech;document.getElementById('chatInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChat()}});await loadIncidents()});
+window.addEventListener('beforeunload',()=>clearInterval(chatTimer));
+</script>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{% block title %}CareConnect{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  {% block head %}{% endblock %}
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="/dashboard/"><span class="brand-mark">C</span><span>CareConnect</span></a>
+      <div class="side-label">MAIN MENU</div>
+      <nav class="side-nav">
+        <a href="/dashboard/" data-nav="dashboard"><span class="nav-icon">⌂</span><span>Dashboard</span></a>
+        <a href="/sos/" data-nav="sos" class="nav-sos"><span class="nav-icon">!</span><span>SOS Emergency</span></a>
+        <a href="/location/" data-nav="location"><span class="nav-icon">⌖</span><span>Live GPS</span></a>
+        <a href="/emergency-contacts/" data-nav="contacts"><span class="nav-icon">♧</span><span>Emergency Contacts</span></a>
+        <a href="/emergency-history/" data-nav="history"><span class="nav-icon">▤</span><span>Incidents</span></a>
+        <a href="/notifications/" data-nav="notifications"><span class="nav-icon">◉</span><span>Notifications</span></a>
+        <a href="/admin-portal/" data-nav="admin" data-admin-only><span class="nav-icon">▣</span><span>Response Center</span></a>
+      </nav>
+      <div class="sidebar-bottom">
+        <a href="#" data-logout class="logout-link"><span class="nav-icon">↪</span><span>Sign out</span></a>
+      </div>
+    </aside>
+
+    <div class="main-area">
+      <header class="topbar">
+        <button class="menu-toggle" id="menuToggle" aria-label="Open menu">☰</button>
+        <div class="topbar-title">
+          <span class="topbar-kicker">CARECONNECT</span>
+          <strong id="pageHeading">Community safety</strong>
+        </div>
+        <div class="topbar-actions">
+          <a class="quick-sos" href="/sos/"><span>!</span> SOS</a>
+          <a class="profile" href="/dashboard/" aria-label="Open profile">
+            <span class="profile-avatar" data-user-initial>G</span>
+            <span class="profile-copy"><strong data-user-name>Guest</strong><small data-user-role>Resident</small></span>
+          </a>
+        </div>
+      </header>
+      <main class="content-wrap">{% block content %}{% endblock %}</main>
+      <footer class="footer">CareConnect · Community Emergency Response & Assistance Network</footer>
+    </div>
+  </div>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <div id="toast" class="toast"></div>
+  <script src="{% static 'js/auth.js' %}"></script>
+  <script src="{% static 'js/app.js' %}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

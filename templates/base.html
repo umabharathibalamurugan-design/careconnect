@@ -1,0 +1,57 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0f172a">
+  <title>{% block title %}CareConnect{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  {% block head %}{% endblock %}
+</head>
+<body class="{% if request.path == '/login/' or request.path == '/register/' %}auth-page{% endif %}">
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <a class="brand" href="/dashboard/"><span class="brand-mark">C</span><span>CareConnect</span></a>
+    <div class="role-chip"><span class="role-dot"></span><span data-user-role>Guest</span></div>
+    <div class="side-label">WORKSPACE</div>
+    <nav class="side-nav">
+      <a href="/dashboard/" data-nav="dashboard"><span class="nav-icon">⌂</span><span>Dashboard</span></a>
+      <a href="/location/" data-nav="location"><span class="nav-icon">⌖</span><span>Live GPS</span></a>
+      <a href="/emergency-contacts/" data-nav="contacts" data-contact-role><span class="nav-icon">♧</span><span>Emergency Contacts</span></a>
+      <a href="/emergency-history/" data-nav="history"><span class="nav-icon">▤</span><span>Incidents</span></a>
+      <a href="/notifications/" data-nav="notifications"><span class="nav-icon">◉</span><span>Notifications</span><span id="notificationBadge" class="notification-badge" hidden>0</span></a>
+      <a href="/admin-portal/" data-nav="admin" data-command-center><span class="nav-icon">▣</span><span>Response Center</span></a>
+    </nav>
+    <div class="sidebar-bottom">
+      <a href="#" data-logout class="logout-link"><span class="nav-icon">↪</span><span>Sign out</span></a>
+    </div>
+  </aside>
+  <div class="main-area">
+    <header class="topbar">
+      <button class="menu-toggle" id="menuToggle" aria-label="Open menu">☰</button>
+      <div class="topbar-title"><span class="topbar-kicker">CARECONNECT</span><strong id="pageHeading">Community safety</strong></div>
+      <div class="topbar-actions"><select id="languageSelect" class="language-select" aria-label="Language"><option value="en">English</option><option value="ta">தமிழ்</option><option value="hi">हिन्दी</option><option value="te">తెలుగు</option><option value="kn">ಕನ್ನಡ</option><option value="ml">മലയാളം</option><option value="mr">मराठी</option><option value="bn">বাংলা</option><option value="gu">ગુજરાતી</option><option value="pa">ਪੰਜਾਬੀ</option><option value="or">ଓଡ଼ିଆ</option></select>
+        <a class="profile" href="/dashboard/" aria-label="Open dashboard"><span class="profile-avatar" data-user-initial>G</span><span class="profile-copy"><strong data-user-name>Guest</strong><small data-user-role>Guest</small></span></a>
+      </div>
+    </header>
+    <button id="aiAssistantToggle" class="ai-assistant-fab" type="button" aria-label="Open CareConnect AI Safety Copilot"><span>✦</span></button>
+    <section id="aiAssistant" class="ai-assistant" hidden aria-label="CareConnect AI Safety Copilot">
+      <div class="ai-head"><div><strong>CareConnect AI Safety Copilot</strong><small id="aiContextLine">Role-aware emergency assistance</small></div><button id="aiClose" type="button" aria-label="Close assistant">×</button></div>
+      <div id="aiBriefing" class="ai-briefing">Checking your live safety context…</div>
+      <div id="aiMessages" class="ai-messages"><div class="ai-msg bot">I am connected to your CareConnect workspace. I can help with incidents, responders, safety check-ins, location status, escalation, accessibility and emergency actions.</div></div>
+      <div class="ai-quick"><button type="button" data-ai="I need emergency help">🚨 Emergency</button><button type="button" data-ai="What is my current incident status?">📍 Incident status</button><button type="button" data-ai="Who can respond to my incident?">🤝 Responders</button><button type="button" data-ai="How does escalation work?">⚠ Escalation</button><button type="button" data-ai="How do I use voice and accessibility features?">♿ Accessibility</button></div>
+      <div id="aiActions" class="ai-actions" hidden></div>
+      <form id="aiForm" class="ai-form"><input id="aiInput" autocomplete="off" placeholder="Ask the CareConnect Copilot…" aria-label="Ask CareConnect AI Safety Copilot"><button type="submit">Send</button></form>
+      <div class="ai-disclaimer">CareConnect Copilot uses your permitted app context. It does not invent locations, responders, police dispatches or completed calls.</div>
+    </section>
+    <main class="content-wrap">{% block content %}{% endblock %}</main>
+    <footer class="footer">CareConnect · Community Emergency Response &amp; Assistance Network</footer>
+  </div>
+</div>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<div id="offlineBanner" class="offline-banner" hidden>⚠ Offline mode — emergency actions will sync when the connection returns.</div><div id="toast" class="toast"></div>
+<script src="{% static 'js/auth.js' %}"></script>
+<script src="{% static 'js/app.js' %}"></script><script src="{% static 'js/ai_assistant.js' %}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>
