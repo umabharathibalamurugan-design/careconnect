@@ -131,7 +131,6 @@ USE_TZ = True
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
-
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
@@ -139,7 +138,14 @@ STATICFILES_DIRS = [
     BASE_DIR / "frontend",
 ]
 
-STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+    },
+}
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
