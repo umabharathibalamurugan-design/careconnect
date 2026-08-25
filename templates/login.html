@@ -1,0 +1,48 @@
+{% extends 'base.html' %}{% load static %}
+{% block title %}CareConnect | Secure Login{% endblock %}
+{% block content %}
+<main class="auth-shell">
+  <section class="auth-card">
+    <div class="auth-brand"><span class="brand-mark">C</span><div><strong>CareConnect</strong><small>Community Emergency Response</small></div></div>
+    <div class="eyebrow">SECURE ACCESS</div>
+    <h1>Welcome back</h1>
+    <p class="muted auth-intro">Sign in first. CareConnect will identify your role and open the correct workspace.</p>
+    <div class="role-trust"><span>🔐 Authenticated</span><span>🛡 Role based</span><span>♿ Accessible</span></div>
+    <div id="msg" aria-live="polite"></div>
+    <form id="loginForm" novalidate>
+      <div class="field"><label for="username">Username</label><input id="username" required autocomplete="username" autofocus></div>
+      <div class="field"><label for="password">Password</label><input id="password" type="password" required autocomplete="current-password"></div>
+      <button class="btn btn-primary auth-submit" type="submit">Login to CareConnect →</button>
+    </form>
+    <p class="muted auth-register">New user? <a href="/register/">Create an account</a></p>
+  </section>
+  <aside class="auth-promise"><img class="auth-illustration" src="{% static 'images/careconnect-emergency.svg' %}" alt="CareConnect emergency response illustration">
+    <span class="eyebrow">EMERGENCY-FIRST DESIGN</span>
+    <h2>When something goes wrong, the next step should be obvious.</h2>
+    <div class="auth-promise-list">
+      <div><b>01</b><span>Login & role detection</span></div>
+      <div><b>02</b><span>Personalized dashboard</span></div>
+      <div><b>03</b><span>SOS → notify → respond → resolve</span></div>
+    </div>
+  </aside>
+</main>
+{% endblock %}
+{% block scripts %}
+<script>
+document.getElementById('loginForm').onsubmit=async e=>{
+  e.preventDefault();
+  const m=document.getElementById('msg');
+  const u=document.getElementById('username').value.trim();
+  const p=document.getElementById('password').value;
+  if(!u||!p){m.innerHTML='<div class="notice error">Enter both username and password.</div>';return}
+  m.innerHTML='<div class="notice">Signing in securely…</div>';
+  try{
+    const d=await CC.json('/api/auth/login/',{method:'POST',body:JSON.stringify({username:u,password:p})});
+    CC.save(d);
+    location.replace('/dashboard/');
+  }catch(x){
+    m.innerHTML='<div class="notice error">'+esc(x.message)+'</div>';
+  }
+};
+</script>
+{% endblock %}

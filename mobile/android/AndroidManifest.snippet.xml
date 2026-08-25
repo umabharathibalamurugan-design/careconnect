@@ -1,0 +1,26 @@
+<!-- Merge into your existing AndroidManifest.xml -->
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+<uses-permission android:name="android.permission.RECORD_AUDIO"/>
+<uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE"/>
+
+<application ...>
+    <activity android:name=".safety.FakeCallActivity"
+        android:exported="false"
+        android:screenOrientation="portrait"/>
+    <!-- Optional only if your distribution/permissions policy allows it:
+    <service
+        android:name=".safety.SafetyCompanionKeyService"
+        android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
+        android:exported="false">
+        <intent-filter>
+            <action android:name="android.accessibilityservice.AccessibilityService"/>
+        </intent-filter>
+        <meta-data
+            android:name="android.accessibilityservice"
+            android:resource="@xml/safety_accessibility_service"/>
+    </service>
+    -->
+</application>

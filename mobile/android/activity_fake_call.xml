@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical" android:gravity="center"
+    android:padding="32dp" android:background="#0B1220">
+    <TextView android:id="@+id/callerName" android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:text="Mom" android:textColor="@android:color/white" android:textSize="34sp"/>
+    <TextView android:id="@+id/callStatus" android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:layout_marginTop="8dp" android:text="Incoming call" android:textColor="#94A3B8" android:textSize="16sp"/>
+    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="80dp">
+        <Button android:id="@+id/declineButton" android:layout_width="120dp" android:layout_height="60dp"
+            android:text="Decline"/>
+        <Button android:id="@+id/acceptButton" android:layout_width="120dp" android:layout_height="60dp"
+            android:layout_marginStart="28dp" android:text="Accept"/>
+    </LinearLayout>
+</LinearLayout>
