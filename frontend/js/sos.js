@@ -49,7 +49,13 @@ function getGPS(){
 }
 
 async function captureGPS(){
-  sosCoords=await getGPS();
+  const coords=await getGPS();
+
+  sosCoords={
+    latitude:Number(coords.latitude.toFixed(6)),
+    longitude:Number(coords.longitude.toFixed(6)),
+    accuracy:coords.accuracy
+  };
 
   const gps=document.getElementById('gps');
 
@@ -87,8 +93,8 @@ async function sendSOS(source='manual'){
           message:
             (document.getElementById('message')?.value||'Emergency SOS activated')+
             (source!=='manual'?` [Triggered by ${source}]`:''),
-          latitude:sosCoords.latitude,
-          longitude:sosCoords.longitude,
+          latitude:Number(sosCoords.latitude.toFixed(6)),
+          longitude:Number(sosCoords.longitude.toFixed(6)),
           response_window_minutes:2
         })
       }
