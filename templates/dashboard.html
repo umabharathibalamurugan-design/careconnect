@@ -74,21 +74,6 @@
     </div>
 
     <div class="sc-lower-grid">
-      <article class="sc-panel">
-        <div class="sc-panel-head"><div><span class="sc-label">SAFER ROUTE</span><h3>Choose safety over shortest distance</h3><p>Uses crowd-sourced route scores and weighted Dijkstra pathfinding.</p></div><span class="sc-score-badge" id="scRouteScore">—</span></div>
-        <div class="sc-form-grid">
-          <label>Destination latitude<input id="scDestLat" type="number" step="any" placeholder="13.0827"></label>
-          <label>Destination longitude<input id="scDestLng" type="number" step="any" placeholder="80.2707"></label>
-          <label>Safety preference<select id="scRouteWeight"><option value="1">Balanced</option><option value="2" selected>Safer</option><option value="4">Maximum safety</option></select></label>
-          <button class="sc-primary-btn" id="scRouteBtn" type="button">Find safer route</button>
-        </div>
-        <div id="scRouteResult" class="sc-route-result">Your current GPS position will be used as the start.</div>
-        <div class="sc-report-row">
-          <span>Help the community: rate your current road segment</span>
-          <select id="scSegmentScore"><option value="95">Very safe · 95</option><option value="75">Safe · 75</option><option value="50" selected>Neutral · 50</option><option value="25">Unsafe · 25</option><option value="5">Very unsafe · 5</option></select>
-          <button class="sc-link" id="scReportSegment" type="button">Submit GPS rating</button>
-        </div>
-      </article>
 
       <article class="sc-panel">
         <div class="sc-panel-head"><div><span class="sc-label">DAILY WELLNESS</span><h3>One simple “I’m okay” check</h3><p>Missed checks become a lower-severity guardian welfare notification, not a full SOS.</p></div><span class="sc-score-badge" id="scWellnessState">OFF</span></div>
