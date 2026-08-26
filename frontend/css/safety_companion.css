@@ -1,34 +1,438 @@
-/* CareConnect Safety & Companion â€” additive, scoped styles only. Existing dashboard styles are untouched. */
-.safety-companion-section{position:relative;overflow:hidden}
-.safety-companion-head{display:flex;justify-content:space-between;gap:24px;align-items:flex-start;margin-bottom:18px}
-.safety-companion-head h2{margin:4px 0 7px;font-size:clamp(1.25rem,2vw,1.65rem)}
-.safety-companion-head p{margin:0;max-width:720px;color:#64748b;line-height:1.6}
-.sc-status,.sc-score-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:#f0fdf4;color:#166534;font-size:.78rem;font-weight:800;white-space:nowrap}
-.sc-status i{width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 4px #dcfce7}
-.sc-feature-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-.sc-feature-card,.sc-panel{border:1px solid #e2e8f0;background:linear-gradient(180deg,#fff,#f8fafc);border-radius:18px;box-shadow:0 8px 25px rgba(15,23,42,.05)}
-.sc-feature-card{padding:16px;display:flex;gap:13px;min-height:150px}
-.sc-icon{width:38px;height:38px;flex:0 0 38px;display:grid;place-items:center;border-radius:12px;background:#eef2ff;color:#4338ca;font-size:1.2rem;font-weight:900}
-.sc-discreet .sc-icon{background:#f1f5f9;color:#0f172a}
-.sc-card-body{min-width:0}.sc-card-body h3{margin:3px 0 5px;font-size:1rem}.sc-card-body p{margin:0 0 12px;color:#64748b;font-size:.82rem;line-height:1.5}
-.sc-label{font-size:.67rem;letter-spacing:.12em;font-weight:900;color:#64748b}
-.sc-row{display:flex;align-items:center;justify-content:space-between;gap:8px;color:#475569;font-size:.76rem}
-.sc-link{border:0;background:transparent;color:#4f46e5;font-weight:800;cursor:pointer;padding:6px 0}.sc-link:disabled{opacity:.45;cursor:not-allowed}
-.sc-primary-btn{border:0;border-radius:10px;background:#111827;color:#fff;padding:9px 12px;font-weight:800;cursor:pointer;box-shadow:0 4px 12px rgba(15,23,42,.12)}
-.sc-primary-btn:hover{transform:translateY(-1px)}
-.sc-mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.sc-mini-grid span{padding:8px 10px;border-radius:10px;background:#f1f5f9}.sc-mini-grid b{display:block;font-size:.78rem;color:#166534}.sc-mini-grid small{color:#64748b}
-.sc-lower-grid{display:grid;grid-template-columns:1.25fr .9fr;gap:12px;margin-top:12px}
-.sc-panel{padding:18px}.sc-panel-head{display:flex;justify-content:space-between;gap:16px}.sc-panel-head h3{margin:4px 0 4px}.sc-panel-head p{margin:0;color:#64748b;font-size:.82rem;line-height:1.45}
-.sc-score-badge{background:#eef2ff;color:#4338ca}
-.sc-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px;align-items:end}
-.sc-form-grid label{font-size:.74rem;font-weight:800;color:#475569}.sc-form-grid input,.sc-form-grid select{display:block;width:100%;box-sizing:border-box;margin-top:6px;border:1px solid #cbd5e1;border-radius:10px;padding:10px 11px;background:#fff;color:#0f172a}
-.sc-route-result{margin-top:12px;border-radius:12px;background:#f8fafc;border:1px dashed #cbd5e1;padding:11px;color:#475569;font-size:.82rem;line-height:1.5}
-.sc-report-row{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;color:#64748b;font-size:.76rem}
-.sc-report-row select{border:1px solid #cbd5e1;border-radius:9px;padding:7px 9px;background:#fff}
-.sc-wellness-actions{display:flex;align-items:center;gap:10px;margin-top:14px;padding:11px 12px;border-radius:12px;background:#f8fafc;color:#64748b;font-size:.8rem}
-.sc-note{margin-top:12px;padding:11px 13px;border-radius:12px;background:#f8fafc;color:#64748b;font-size:.75rem;line-height:1.5}
-@media(max-width:1100px){.sc-feature-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.sc-lower-grid{grid-template-columns:1fr}}
-@media(max-width:650px){.safety-companion-head{flex-direction:column}.sc-feature-grid{grid-template-columns:1fr}.sc-form-grid{grid-template-columns:1fr}.sc-panel{padding:14px}}
-/* Local decoy call overlay; no API/network request is made. */
-.sc-call-overlay{position:fixed;inset:0;z-index:9999;background:radial-gradient(circle at 50% 25%,#334155,#020617 62%);display:flex;align-items:center;justify-content:center;color:#fff;font-family:system-ui,sans-serif}
-.sc-call-card{width:min(380px,90vw);text-align:center}.sc-call-avatar{width:92px;height:92px;border-radius:50%;margin:0 auto 18px;display:grid;place-items:center;background:#64748b;font-size:2rem;font-weight:900}.sc-call-card .small{opacity:.65;font-size:.85rem}.sc-call-card h2{font-size:2rem;margin:5px 0}.sc-call-card p{opacity:.7}.sc-call-actions{display:flex;justify-content:center;gap:45px;margin-top:70px}.sc-call-action{width:68px;height:68px;border:0;border-radius:50%;color:#fff;font-size:1.5rem;cursor:pointer}.sc-call-action.decline{background:#ef4444}.sc-call-action.accept{background:#22c55e}
+/* =========================================================
+   CARECONNECT — SAFETY COMPANION
+   CLEAN COMPACT BOX LAYOUT
+   ========================================================= */
+
+.safety-companion-section {
+    margin-top: 24px;
+}
+
+.safety-companion-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.safety-companion-head h2 {
+    margin: 4px 0 5px;
+    font-size: 22px;
+}
+
+.safety-companion-head p {
+    margin: 0;
+    font-size: 13px;
+}
+
+/* =========================
+   FEATURE BOXES
+   ========================= */
+
+.sc-feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    width: 100%;
+}
+
+.sc-feature-card {
+    min-width: 0;
+    height: 190px;
+    box-sizing: border-box;
+    padding: 14px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.sc-icon {
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-size: 14px;
+    margin-bottom: 9px;
+}
+
+.sc-card-body {
+    min-width: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.sc-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    margin-bottom: 4px;
+}
+
+.sc-card-body h3 {
+    margin: 0 0 5px;
+    font-size: 15px;
+    line-height: 1.2;
+}
+
+.sc-card-body p {
+    margin: 0;
+    font-size: 11px;
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* =========================
+   BUTTON / STATUS ROW
+   ========================= */
+
+.sc-row {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 7px;
+    min-width: 0;
+}
+
+.sc-row span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 10px;
+}
+
+.sc-link,
+.sc-primary-btn {
+    flex-shrink: 0;
+    width: auto;
+    min-height: 30px;
+    padding: 5px 10px;
+    border-radius: 7px;
+    font-size: 10px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* =========================
+   FALL / INACTIVITY
+   ========================= */
+
+.sc-mini-grid {
+    margin-top: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+}
+
+.sc-mini-grid span {
+    min-width: 0;
+    padding: 6px;
+    border-radius: 7px;
+    text-align: center;
+}
+
+.sc-mini-grid b {
+    display: block;
+    font-size: 11px;
+}
+
+.sc-mini-grid small {
+    display: block;
+    margin-top: 2px;
+    font-size: 9px;
+}
+
+/* =========================
+   LOWER PANELS
+   ========================= */
+
+.sc-lower-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.sc-panel {
+    min-width: 0;
+    padding: 15px;
+    border-radius: 12px;
+    box-sizing: border-box;
+}
+
+.sc-panel-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.sc-panel-head h3 {
+    margin: 3px 0 4px;
+    font-size: 15px;
+}
+
+.sc-panel-head p {
+    margin: 0;
+    font-size: 10px;
+    line-height: 1.35;
+}
+
+/* =========================
+   FORMS
+   ========================= */
+
+.sc-form-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr) auto;
+    gap: 7px;
+    align-items: end;
+}
+
+.sc-form-grid label {
+    min-width: 0;
+    font-size: 9px;
+    font-weight: 600;
+}
+
+.sc-form-grid input,
+.sc-form-grid select {
+    width: 100%;
+    height: 32px;
+    box-sizing: border-box;
+    margin-top: 4px;
+    padding: 5px 7px;
+    border-radius: 7px;
+    font-size: 10px;
+}
+
+.sc-route-result {
+    margin-top: 8px;
+    padding: 8px;
+    border-radius: 7px;
+    font-size: 10px;
+}
+
+.sc-report-row {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: 8px;
+    font-size: 9px;
+}
+
+.sc-report-row span {
+    flex: 1;
+    min-width: 0;
+}
+
+.sc-report-row select {
+    width: 120px;
+    height: 30px;
+    font-size: 9px;
+}
+
+/* =========================
+   WELLNESS
+   ========================= */
+
+.sc-wellness-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 9px;
+}
+
+#scWellnessMessage {
+    font-size: 10px;
+}
+
+/* =========================
+   PRIVACY NOTE
+   ========================= */
+
+.sc-note {
+    margin-top: 12px;
+    padding: 9px 11px;
+    border-radius: 8px;
+    font-size: 10px;
+    line-height: 1.4;
+}
+
+/* =========================
+   MOBILE
+   ========================= */
+
+@media (max-width: 900px) {
+
+    .sc-feature-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .sc-lower-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .safety-companion-head {
+        display: block;
+    }
+
+    .sc-status {
+        display: inline-flex;
+        margin-top: 8px;
+    }
+
+    .sc-feature-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .sc-feature-card {
+        height: 175px;
+    }
+
+    .sc-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .sc-report-row {
+        flex-wrap: wrap;
+    }
+
+    .sc-report-row span {
+        flex-basis: 100%;
+    }
+
+}
+/* =========================================================
+   VISIBLE SMALL SAFETY COMPANION BOXES
+   ========================================================= */
+
+.sc-feature-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 14px !important;
+    width: 100% !important;
+    margin-top: 18px !important;
+}
+
+.sc-feature-card {
+    background: #ffffff !important;
+    border: 1px solid #e3e7ee !important;
+    border-radius: 12px !important;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06) !important;
+    padding: 14px !important;
+    height: 155px !important;
+    min-height: 155px !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.sc-feature-card .sc-icon {
+    width: 30px !important;
+    height: 30px !important;
+    min-width: 30px !important;
+    margin-bottom: 7px !important;
+    border-radius: 7px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.sc-card-body {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+    min-width: 0 !important;
+}
+
+.sc-card-body .sc-label {
+    font-size: 9px !important;
+    margin-bottom: 3px !important;
+}
+
+.sc-card-body h3 {
+    font-size: 15px !important;
+    margin: 0 0 4px !important;
+}
+
+.sc-card-body p {
+    font-size: 10px !important;
+    line-height: 1.35 !important;
+    margin: 0 !important;
+}
+
+.sc-row {
+    margin-top: auto !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 8px !important;
+}
+
+.sc-row span {
+    font-size: 9px !important;
+}
+
+.sc-link,
+.sc-primary-btn {
+    width: auto !important;
+    min-width: 0 !important;
+    height: 29px !important;
+    min-height: 29px !important;
+    padding: 5px 10px !important;
+    border-radius: 7px !important;
+    font-size: 10px !important;
+    white-space: nowrap !important;
+}
+
+.sc-mini-grid {
+    margin-top: auto !important;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 6px !important;
+}
+
+.sc-mini-grid span {
+    padding: 5px !important;
+    border-radius: 6px !important;
+}
+
+.sc-mini-grid b {
+    font-size: 11px !important;
+}
+
+.sc-mini-grid small {
+    font-size: 8px !important;
+}
+
+@media (max-width: 900px) {
+    .sc-feature-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+}
+
+@media (max-width: 600px) {
+    .sc-feature-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .sc-feature-card {
+        height: 145px !important;
+        min-height: 145px !important;
+    }
+}
