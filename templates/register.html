@@ -1,0 +1,32 @@
+{% extends 'base.html' %}{% load static %}
+{% block title %}CareConnect | Create account{% endblock %}
+{% block content %}
+<main class="page auth-page"><section class="card auth-card register-card">
+<div class="auth-brand"><span class="brand-mark">C</span><div><strong>CareConnect</strong><small>Community Emergency Network</small></div></div>
+<div class="eyebrow">CREATE ACCOUNT</div><h1>Set up your safe circle</h1><p class="muted auth-intro">Create your account and save one primary and one secondary emergency contact.</p>
+<div class="role-picker" id="rolePicker">
+<button type="button" data-role="resident" class="selected"><b>Resident</b><small>SOS &amp; safety tools</small></button><button type="button" data-role="guardian"><b>Guardian</b><small>Alerts &amp; location</small></button><button type="button" data-role="volunteer"><b>Volunteer</b><small>Emergency response</small></button><button type="button" data-role="security"><b>Security</b><small>On-site response</small></button><button type="button" data-role="society_admin"><b>Society Admin</b><small>Society operations</small></button><button type="button" data-role="admin"><b>Admin</b><small>Command center</small></button>
+</div><div id="msg"></div>
+<form id="registerForm"><input type="hidden" id="role" value="resident">
+<div class="grid grid-2">
+<div class="field"><label>Username</label><input id="username" required autocomplete="username"></div><div class="field"><label>Email</label><input id="email" type="email" required autocomplete="email"></div>
+<div class="field"><label>First name</label><input id="first_name" required></div><div class="field"><label>Last name</label><input id="last_name"></div>
+<div class="field"><label>Phone</label><input id="phone_number" required inputmode="tel"></div>
+<div class="field password-field"><label>Password</label><div class="password-wrap"><input id="password" type="password" minlength="8" required autocomplete="new-password"><button type="button" class="password-toggle" data-target="password">Show</button></div></div>
+</div>
+<section class="contact-setup" id="contactSetup"><div class="contact-setup-head"><div><span class="eyebrow">EMERGENCY CONTACTS</span><h2>Your two trusted people</h2><p class="muted">Primary is the first call action; secondary is the backup.</p></div><span class="contact-count">2 slots</span></div>
+<div class="grid grid-2">
+<div class="contact-slot"><div class="slot-title"><span class="slot-number">01</span><div><b>Primary contact</b><small>Called first</small></div></div><div class="field"><label>Name</label><input id="primary_name"></div><div class="field"><label>Phone</label><input id="primary_phone" inputmode="tel"></div><div class="field"><label>Relation</label><select id="primary_relation"></select></div></div>
+<div class="contact-slot"><div class="slot-title"><span class="slot-number">02</span><div><b>Secondary contact</b><small>Backup trusted person</small></div></div><div class="field"><label>Name</label><input id="secondary_name"></div><div class="field"><label>Phone</label><input id="secondary_phone" inputmode="tel"></div><div class="field"><label>Relation</label><select id="secondary_relation"></select></div></div>
+</div></section>
+<button class="btn btn-primary auth-submit" type="submit">Create account &amp; continue</button></form>
+<p class="auth-foot muted">Already registered? <a href="/login/">Sign in</a></p>
+</section></main>
+{% endblock %}
+{% block scripts %}<script>
+const RELATIONS=['Parent','Spouse / Partner','Sibling','Child','Friend','Relative','Caregiver','Neighbour','Other'];
+for(const id of ['primary_relation','secondary_relation'])document.getElementById(id).innerHTML='<option value="">Select relation</option>'+RELATIONS.map(x=>`<option>${x}</option>`).join('');
+document.querySelectorAll('.password-toggle').forEach(btn=>btn.onclick=()=>{const i=document.getElementById(btn.dataset.target);const show=i.type==='password';i.type=show?'text':'password';btn.textContent=show?'Hide':'Show'});
+const picker=document.getElementById('rolePicker');picker.querySelectorAll('button').forEach(b=>b.onclick=()=>{picker.querySelectorAll('button').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');role.value=b.dataset.role;contactSetup.style.display=b.dataset.role==='resident'?'block':'none';document.querySelectorAll('#contactSetup input,#contactSetup select').forEach(x=>x.required=b.dataset.role==='resident')});
+document.getElementById('registerForm').onsubmit=async e=>{e.preventDefault();const m=msg;m.innerHTML='<div class="notice">Creating your secure account…</div>';try{const d=await CC.json('/api/auth/register/',{method:'POST',body:JSON.stringify({username:username.value.trim(),password:password.value,email:email.value,first_name:first_name.value,last_name:last_name.value,phone_number:phone_number.value.trim(),role:role.value})});CC.save(d);if(role.value==='resident'){for(const c of [{name:primary_name.value.trim(),phone_number:primary_phone.value.trim(),relation:primary_relation.value,contact_type:'primary'},{name:secondary_name.value.trim(),phone_number:secondary_phone.value.trim(),relation:secondary_relation.value,contact_type:'secondary'}])await CC.json('/api/',{method:'POST',body:JSON.stringify(c)})}location.href='/dashboard/'}catch(x){m.innerHTML='<div class="notice error">'+esc(x.message)+'</div>'}};
+</script>{% endblock %}

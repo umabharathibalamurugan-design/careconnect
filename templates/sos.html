@@ -1,0 +1,30 @@
+{% extends 'base.html' %}{% load static %}
+{% block title %}CareConnect | Emergency SOS{% endblock %}
+{% block content %}
+<main class="page"><section class="card sos-page-card"><div class="eyebrow">EMERGENCY MODE</div><h1>One-tap SOS</h1><p class="muted">Press once. CareConnect captures GPS and sends a critical alert to the response network.</p><div class="grid grid-2 section"><div><div class="field"><label>Emergency category</label><select id="type"><option>Medical Emergency</option><option>Fire</option><option>Security Threat</option><option>Accident</option><option>Personal Safety</option><option>Other Emergency</option></select></div><div class="field"><label>Message (optional)</label><textarea id="message" placeholder="What is happening?"></textarea><div class="voice-input-row"><button class="btn btn-light" id="voiceToTextBtn" type="button">🎙️ Speak message</button><span id="voiceToTextStatus" class="meta">Optional voice-to-text</span></div></div><div class="coords" id="gps">GPS will be captured automatically.</div><div class="emergency-tools"><button class="tool-btn" id="callBtn" type="button"><span class="tool-icon">☎</span>Call</button><button class="tool-btn" id="recordBtn" type="button"><span class="tool-icon">●</span><span id="recordText">Record voice</span></button><button class="tool-btn" id="soundBtn" type="button"><span class="tool-icon">◉</span>Sound detect</button></div><div class="sound-meter" id="soundMeter" style="display:none"><span></span></div><p id="soundStatus" class="muted" style="margin-top:7px"></p></div><div class="sos-wrap"><button id="activateSOS" class="sos-button" aria-label="Send SOS">SOS</button><p class="muted" style="text-align:center;margin-top:14px">Tap once to activate</p></div></div><div class="emergency-mode-status" id="emergencyModeStatus" hidden>
+  <div class="emergency-mode-title"><strong>🔴 EMERGENCY ACTIVE</strong><span id="emergencyId">Incident not created yet</span></div>
+  <div class="emergency-status-grid">
+    <span>📍 Location <b id="emLocation">Pending</b></span>
+    <span>🔔 Response network <b id="emAlerts">Pending</b></span>
+    <span>👨‍👩‍👧 Guardian <b id="emGuardian">Pending</b></span>
+    <span>🛡️ Security <b id="emSecurity">Pending</b></span>
+    <span>🤝 Responder <b id="emResponder">Searching</b></span>
+    <span>🚓 Emergency services <b id="emPolice">Standby</b></span>
+  </div>
+  <div class="response-timeline" id="responseTimeline">
+    <span class="done">SOS</span><i>→</i><span>Notified</span><i>→</i><span>Accepted</span><i>→</i><span>On Way</span><i>→</i><span>Arrived</span><i>→</i><span>Resolved</span>
+  </div>
+  <div class="actions emergency-action-row"><button class="btn btn-light" id="emCall" type="button">📞 Call</button><button class="btn btn-light" id="emLocationBtn" type="button">📍 Open location</button><button class="btn btn-light" id="emPoliceBtn" type="button">🚓 Nearby police</button><button class="btn btn-danger" id="emEscalateBtn" type="button">⚠ Escalate</button><button class="btn btn-success" id="emSafe" type="button">✓ I'm Safe</button></div>
+  <div class="emergency-chat-box">
+    <div><strong>Two-way response chat</strong><span>Send a short update to the active response team.</span></div>
+    <div class="actions"><input id="emChatInput" maxlength="500" placeholder="Example: I am at the main gate…" aria-label="Emergency response message"><button class="btn btn-primary" id="emChatSend" type="button">Send</button></div>
+    <div id="emChatLast" class="meta">No messages yet.</div>
+  </div>
+</div>
+<div class="police-help-card">
+  <div><span class="eyebrow">EMERGENCY SERVICES</span><h3>Need police or emergency services?</h3><p class="muted">CareConnect can open nearby police locations from your current GPS. Automatic police dispatch requires an authorised emergency-service integration.</p></div>
+  <div class="actions"><button class="btn btn-light" id="nearbyPoliceBtn" type="button">🚓 Find nearby police</button><a class="btn btn-danger" href="tel:112">📞 Emergency services</a></div>
+</div>
+<div id="sosStatus" class="notice" style="margin-top:18px">Ready. GPS is captured automatically when SOS is pressed.</div></section></main>
+{% endblock %}
+{% block scripts %}<script src="{% static 'js/sos.js' %}"></script>{% endblock %}

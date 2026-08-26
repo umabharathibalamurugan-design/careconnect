@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}CareConnect | Dashboard{% endblock %}
+{% block content %}
+<main class="page">
+  <section class="hero">
+    <div class="eyebrow">OVERVIEW</div>
+    <h1 id="welcome">Welcome to CareConnect</h1>
+    <p>Manage your community safety, emergency contacts, live location and incident response from one clean workspace.</p>
+    <div class="actions">
+      <a class="btn btn-danger" href="/sos/">🚨 Activate SOS</a>
+      <a class="btn btn-primary" href="/location/">⌖ Start Live GPS</a>
+      <a class="btn btn-light" href="/emergency-contacts/">♧ Manage Contacts</a>
+    </div>
+  </section>
+
+  <section class="section grid grid-4 dashboard-grid">
+    <div class="card metric-card"><div class="metric-head"><span class="muted">Total incidents</span><span class="metric-icon">▤</span></div><div id="total" class="stat-value">0</div></div>
+    <div class="card metric-card"><div class="metric-head"><span class="muted">Active incidents</span><span class="metric-icon">!</span></div><div id="active" class="stat-value">0</div></div>
+    <div class="card metric-card"><div class="metric-head"><span class="muted">Critical incidents</span><span class="metric-icon">⚠</span></div><div id="critical" class="stat-value">0</div></div>
+    <div class="card metric-card"><div class="metric-head"><span class="muted">Your access</span><span class="metric-icon">●</span></div><div class="stat-value" style="font-size:19px" data-user-role></div></div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><div><h2>Quick actions</h2><p class="muted">Everything you need is one click away.</p></div></div>
+    <div class="grid grid-3 quick-grid">
+      <div class="card"><h3>🚨 Emergency SOS</h3><p class="muted">Send an emergency alert with your browser GPS and message.</p><a class="btn btn-danger" style="margin-top:14px" href="/sos/">Open SOS</a></div>
+      <div class="card"><h3>📍 Live location</h3><p class="muted">Share your current location and follow movement on the map.</p><a class="btn btn-light" style="margin-top:14px" href="/location/">Open GPS</a></div>
+      <div class="card"><h3>🔔 Notifications</h3><p class="muted">Review emergency and response updates delivered to you.</p><a class="btn btn-light" style="margin-top:14px" href="/notifications/">View alerts</a></div>
+      <div class="card"><h3>👥 Emergency contacts</h3><p class="muted">Keep guardians and trusted contacts ready for an emergency.</p><a class="btn btn-light" style="margin-top:14px" href="/emergency-contacts/">Manage contacts</a></div>
+      <div class="card" id="responderCard" style="display:none"><h3>🚑 Responder workflow</h3><p class="muted">Accept incidents, track responses and communicate with the team.</p><a class="btn btn-light" style="margin-top:14px" href="/emergency-history/">Open incidents</a></div>
+      <div class="card" id="adminCard" style="display:none"><h3>🛡 Response center</h3><p class="muted">Monitor, assign, escalate and resolve community emergencies.</p><a class="btn btn-primary" style="margin-top:14px" href="/admin-portal/">Open center</a></div>
+    </div>
+  </section>
+
+  <section class="section card">
+    <div class="section-head"><div><h2>Recent incidents</h2><p class="muted">Your latest emergency activity.</p></div><a class="btn btn-light" href="/emergency-history/">View all</a></div>
+    <div id="incidentList" class="list"><div class="empty">Loading incidents…</div></div>
+  </section>
+</main>
+{% endblock %}
+{% block scripts %}<script src="{% static 'js/dashboard.js' %}"></script>{% endblock %}
